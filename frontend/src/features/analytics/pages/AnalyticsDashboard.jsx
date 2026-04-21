@@ -15,6 +15,7 @@ export function AnalyticsDashboard() {
 
       <section className="analytics-grid" aria-label="Analytics visualization grid">
         <AnalyticsSection
+          className="analytics-section--kpi"
           title="KPI Snapshot"
           description="Top-level cards for accident totals and hazard highlights"
         >
@@ -22,6 +23,7 @@ export function AnalyticsDashboard() {
         </AnalyticsSection>
 
         <AnalyticsSection
+          className="analytics-section--trend"
           title="Accident Trend by Time"
           description="Line chart area for morning, afternoon, evening, and night trends"
         >
@@ -29,9 +31,9 @@ export function AnalyticsDashboard() {
         </AnalyticsSection>
 
         <AnalyticsSection
+          className="analytics-section--context"
           title="Indian Context Correlations"
           description="Pie and bar charts for wrong-way, potholes, and severity context"
-          className="analytics-grid__double"
         >
           <div className="analytics-grid__split">
             <PlaceholderPanel label="Pie Chart Placeholder" minHeight={280} />
