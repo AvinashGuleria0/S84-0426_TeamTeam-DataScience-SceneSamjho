@@ -94,8 +94,16 @@ export function AnalyticsDashboard() {
     loadAnalytics();
   }
 
+  const liveStatusText = isLoading
+    ? "Loading analytics dashboard"
+    : isRefreshing
+      ? "Refreshing analytics dashboard"
+      : lastUpdatedAt
+        ? `Analytics updated at ${lastUpdatedAt.toLocaleTimeString()}`
+        : "Waiting for initial analytics sync";
+
   return (
-    <main className="analytics-page" aria-label="Analytics dashboard">
+    <main className="analytics-page" aria-label="Analytics dashboard" aria-busy={isLoading || isRefreshing}>
       <header className="analytics-page__header">
         <h1>Traffic Analytics Dashboard</h1>
         <p>
@@ -125,6 +133,9 @@ export function AnalyticsDashboard() {
             {warning}
           </div>
         ) : null}
+        <p className="sr-only" role="status" aria-live="polite">
+          {liveStatusText}
+        </p>
       </header>
 
       <section className="analytics-grid" aria-label="Analytics visualization grid">
