@@ -1,6 +1,14 @@
 import "../styles/analytics.css";
 import { AnalyticsSection } from "../components/AnalyticsSection";
 import { PlaceholderPanel } from "../components/PlaceholderPanel";
+import { KpiCards } from "../components/KpiCards";
+
+const KPI_SAMPLE_DATA = {
+  total_accidents: 1384,
+  total_fatalities: 212,
+  top_hazard_weather: "Heavy Rain",
+  top_hazard_road: "Potholes",
+};
 
 export function AnalyticsDashboard() {
   return (
@@ -19,7 +27,7 @@ export function AnalyticsDashboard() {
           title="KPI Snapshot"
           description="Top-level cards for accident totals and hazard highlights"
         >
-          <PlaceholderPanel label="KPI Cards Placeholder" minHeight={160} />
+          <KpiCards data={KPI_SAMPLE_DATA} />
         </AnalyticsSection>
 
         <AnalyticsSection
