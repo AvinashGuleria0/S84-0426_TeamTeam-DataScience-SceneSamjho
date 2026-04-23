@@ -16,7 +16,6 @@ const AdminPortal = () => {
 
   const [formData, setFormData] = useState(initialFormState);
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validate = () => {
@@ -51,23 +50,17 @@ const AdminPortal = () => {
     }
 
     setIsSubmitting(true);
-    setStatus({ type: '', message: '' });
 
     try {
       // Connect to Avinash's endpoint
       await axios.post('/api/v1/accidents', formData);
       
       toast.success('Accident report successfully submitted!');
-      setStatus({ type: 'success', message: 'Accident report successfully submitted!' });
       setFormData(initialFormState); // Reset form
     } catch (error) {
       console.error('Submission error:', error);
       const errorMsg = error.response?.data?.message || 'Failed to submit report. Please try again.';
       toast.error(errorMsg);
-      setStatus({ 
-        type: 'error', 
-        message: errorMsg 
-      });
     } finally {
       setIsSubmitting(false);
     }
@@ -79,13 +72,6 @@ const AdminPortal = () => {
         <h2 className="text-3xl font-bold text-gray-900">New Accident Report</h2>
         <p className="text-gray-600 mt-2">Enter the details of the incident below to ingest data into the system.</p>
       </div>
-
-      {status.message && (
-        <div className={`p-4 rounded-lg mb-6 flex items-center space-x-3 ${status.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
-          {status.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
-          <span>{status.message}</span>
-        </div>
-      )}
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
         <form onSubmit={handleSubmit} className="space-y-6">
