@@ -16,7 +16,6 @@ const AdminPortal = () => {
 
   const [formData, setFormData] = useState(initialFormState);
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validate = () => {
@@ -70,20 +69,18 @@ const AdminPortal = () => {
     }
 
     setIsSubmitting(true);
-    setStatus({ type: '', message: '' });
+    const loadingToastId = toast.loading('Submitting accident report...');
 
     try {
       // Connect to Avinash's endpoint
       await axios.post('/api/v1/accidents', formData);
       
-      setStatus({ type: 'success', message: 'Accident report successfully submitted!' });
+      toast.success('Accident report successfully submitted!', { id: loadingToastId });
       setFormData(initialFormState); // Reset form
     } catch (error) {
       console.error('Submission error:', error);
-      setStatus({ 
-        type: 'error', 
-        message: error.response?.data?.message || 'Failed to submit report. Please try again.' 
-      });
+      const errorMsg = error.response?.data?.message || 'Failed to submit report. Please try again.';
+      toast.error(errorMsg, { id: loadingToastId });
     } finally {
       setIsSubmitting(false);
     }
@@ -95,13 +92,6 @@ const AdminPortal = () => {
         <h2 className="text-3xl font-bold text-gray-900">New Accident Report</h2>
         <p className="text-gray-600 mt-2">Enter the details of the incident below to ingest data into the system.</p>
       </div>
-
-      {status.message && (
-        <div className={`p-4 rounded-lg mb-6 flex items-center space-x-3 ${status.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
-          {status.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
-          <span>{status.message}</span>
-        </div>
-      )}
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
         <form onSubmit={handleSubmit} className="space-y-6">
