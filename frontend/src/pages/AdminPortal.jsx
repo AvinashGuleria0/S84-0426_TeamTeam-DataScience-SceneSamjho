@@ -57,6 +57,7 @@ const AdminPortal = () => {
       // Connect to Avinash's endpoint
       await axios.post('/api/v1/accidents', formData);
       
+      toast.success('Accident report successfully submitted!');
       setStatus({ type: 'success', message: 'Accident report successfully submitted!' });
       setFormData(initialFormState); // Reset form
     } catch (error) {
