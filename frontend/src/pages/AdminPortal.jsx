@@ -20,9 +20,22 @@ const AdminPortal = () => {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.date) newErrors.date = 'Date is required';
+    const today = new Date().toISOString().split('T')[0];
+
+    if (!formData.date) {
+      newErrors.date = 'Date is required';
+    } else if (formData.date > today) {
+      newErrors.date = 'Date cannot be in the future';
+    }
+
     if (!formData.time) newErrors.time = 'Time is required';
-    if (!formData.location.trim()) newErrors.location = 'Location is required';
+
+    if (!formData.location.trim()) {
+      newErrors.location = 'Location is required';
+    } else if (formData.location.trim().length < 5) {
+      newErrors.location = 'Location must be at least 5 characters long';
+    }
+
     if (!formData.description.trim()) newErrors.description = 'Description is required';
     return newErrors;
   };
