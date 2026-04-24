@@ -14,6 +14,13 @@
   background: var(--analytics-bg);
   min-height: 100vh;
   padding: var(--analytics-padding);
+  display: grid;
+  gap: 20px;
+}
+
+.analytics-page__header {
+  display: grid;
+  gap: 6px;
 }
 
 .analytics-page__header h1 {
@@ -44,11 +51,19 @@
   padding: 8px 12px;
   font-weight: 600;
   cursor: pointer;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
 .analytics-refresh-btn:disabled {
   opacity: 0.65;
   cursor: not-allowed;
+}
+
+.analytics-refresh-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: #1d4ed8;
+  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.18);
 }
 
 .analytics-refresh-btn:focus-visible {
@@ -99,6 +114,7 @@
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--analytics-gap);
+  align-items: start;
 }
 
 .analytics-section {
@@ -107,12 +123,17 @@
   border: 1px solid var(--analytics-border);
   border-radius: 12px;
   padding: var(--analytics-panel-padding);
+  box-shadow: 0 10px 24px rgba(23, 34, 59, 0.05);
 }
 
 .analytics-section__header h2 {
   margin: 0;
   color: var(--analytics-title);
   font-size: 1.05rem;
+}
+
+.analytics-section__header {
+  margin-bottom: 4px;
 }
 
 .analytics-section__header p {
@@ -148,6 +169,10 @@
   border-radius: 10px;
   background: #fff;
   padding: 12px;
+  display: grid;
+  gap: 6px;
+  min-height: 100%;
+  box-shadow: 0 4px 12px rgba(23, 34, 59, 0.04);
 }
 
 .kpi-card h3 {
@@ -210,7 +235,8 @@
   border: 1px solid var(--analytics-border);
   border-radius: 10px;
   background: #fff;
-  padding: 8px;
+  padding: 12px 12px 6px;
+  overflow-x: auto;
 }
 
 .chart-inline-note {
@@ -225,7 +251,10 @@
   border: 1px solid var(--analytics-border);
   border-radius: 10px;
   background: #fff;
-  padding: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .context-chart-panel__title {
@@ -257,6 +286,10 @@
   .analytics-page {
     max-width: 1100px;
     margin: 0 auto;
+  }
+
+  .analytics-grid__split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .analytics-section--kpi {
