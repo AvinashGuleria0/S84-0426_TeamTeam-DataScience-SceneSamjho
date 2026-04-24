@@ -49,6 +49,8 @@ export function AnalyticsDashboard() {
   );
   const [error, setError] = useState("");
   const [warning, setWarning] = useState("");
+  const [exportFeedback, setExportFeedback] = useState("");
+  const [exportFeedbackType, setExportFeedbackType] = useState("idle");
   const isMountedRef = useRef(true);
   const latestSnapshotRef = useRef({
     kpis: {},
@@ -185,6 +187,44 @@ export function AnalyticsDashboard() {
     loadAnalytics();
   }
 
+  function handleExportSnapshot() {
+    try {
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        lastUpdatedAt: lastUpdatedAt ? lastUpdatedAt.toISOString() : null,
+        status: {
+          error,
+          warning,
+          isAutoRefreshPaused,
+        },
+        data: {
+          kpis,
+          trendData,
+          contextData,
+        },
+      };
+
+      const fileDate = new Date().toISOString().replace(/[:.]/g, "-");
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `analytics-snapshot-${fileDate}.json`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      URL.revokeObjectURL(url);
+
+      setExportFeedback("Analytics snapshot exported.");
+      setExportFeedbackType("success");
+    } catch (exportError) {
+      setExportFeedback("Failed to export analytics snapshot.");
+      setExportFeedbackType("error");
+    }
+  }
+
   const liveStatusText = isLoading
     ? "Loading analytics dashboard"
     : isRefreshing
@@ -254,6 +294,14 @@ export function AnalyticsDashboard() {
           >
             {isRefreshing ? "Refreshing..." : "Refresh now"}
           </button>
+          <button
+            type="button"
+            className="analytics-export-btn"
+            onClick={handleExportSnapshot}
+            disabled={isLoading}
+          >
+            Export JSON
+          </button>
           <span className={dashboardStatus.className} role="status" aria-live="polite">
             Status: {dashboardStatus.label}
           </span>
@@ -279,6 +327,19 @@ export function AnalyticsDashboard() {
         {warning ? (
           <div className="analytics-warning-banner" role="status" aria-live="polite">
             {warning}
+          </div>
+        ) : null}
+        {exportFeedback ? (
+          <div
+            className={
+              exportFeedbackType === "error"
+                ? "analytics-export-feedback analytics-export-feedback--error"
+                : "analytics-export-feedback analytics-export-feedback--success"
+            }
+            role="status"
+            aria-live="polite"
+          >
+            {exportFeedback}
           </div>
         ) : null}
         <p className="sr-only" role="status" aria-live="polite">
