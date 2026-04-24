@@ -105,6 +105,26 @@ function formatTooltipAccidentCount(value) {
   return [`${value.toLocaleString("en-IN")} accidents`, "Count"];
 }
 
+function summarizeTrend(chartData) {
+  const totalAccidents = chartData.reduce((sum, entry) => {
+    if (typeof entry.total === "number") {
+      return sum + entry.total;
+    }
+
+    const inferredTotal = ["Fatal", "Major", "Minor"].reduce(
+      (innerSum, key) => innerSum + (typeof entry[key] === "number" ? entry[key] : 0),
+      0
+    );
+
+    return sum + inferredTotal;
+  }, 0);
+
+  return {
+    totalAccidents,
+    bucketCount: chartData.length,
+  };
+}
+
 export function TimeSeriesTrendChart({
   data = [],
   isLoading = false,
@@ -149,9 +169,14 @@ export function TimeSeriesTrendChart({
     return <div className="chart-state">Trend format is invalid.</div>;
   }
 
+  const trendSummary = summarizeTrend(chartData);
+
   return (
     <div className="time-series-chart" aria-label="Accident trend line chart">
       {showFallback ? <p className="chart-inline-note">{error}</p> : null}
+      <p className="chart-context-note">
+        Showing {trendSummary.totalAccidents.toLocaleString("en-IN")} total accidents across {trendSummary.bucketCount} time buckets.
+      </p>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart
           data={chartData}

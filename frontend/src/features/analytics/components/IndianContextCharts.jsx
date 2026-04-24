@@ -58,6 +58,13 @@ function getWrongWaySeverityData(data) {
     .sort((a, b) => severitySortValue(a.severity) - severitySortValue(b.severity));
 }
 
+function getTopHazard(hazardData) {
+  return hazardData.reduce(
+    (top, item) => (item.value > top.value ? item : top),
+    { name: "N/A", value: 0 }
+  );
+}
+
 export function IndianContextCharts({
   data = {},
   isLoading = false,
@@ -91,6 +98,9 @@ export function IndianContextCharts({
   const severityData = getWrongWaySeverityData(data);
   const hasHazardData = hazardData.some((item) => item.value > 0);
   const hasSeverityData = severityData.length > 0;
+  const topHazard = getTopHazard(hazardData);
+  const totalHazardIncidents = hazardData.reduce((sum, item) => sum + item.value, 0);
+  const totalWrongWayIncidents = severityData.reduce((sum, item) => sum + item.count, 0);
 
   if (!hasHazardData && !hasSeverityData) {
     return <div className="chart-state">No context data available yet.</div>;
@@ -100,6 +110,11 @@ export function IndianContextCharts({
     <div className="analytics-grid__split" aria-label="Indian context charts">
       <div className="context-chart-panel" aria-label="Hazard distribution pie chart">
         <h3 className="context-chart-panel__title">Hazard Distribution</h3>
+        <p className="chart-context-note">
+          {hasHazardData
+            ? `${formatCount(totalHazardIncidents)} incidents tracked. Top hazard: ${topHazard.name} (${formatCount(topHazard.value)}).`
+            : "No hazard incidents available yet."}
+        </p>
         {hasHazardData ? (
           <ResponsiveContainer width="100%" height={260}>
             <PieChart>
@@ -127,6 +142,11 @@ export function IndianContextCharts({
 
       <div className="context-chart-panel" aria-label="Wrong-way severity bar chart">
         <h3 className="context-chart-panel__title">Wrong-Way Severity</h3>
+        <p className="chart-context-note">
+          {hasSeverityData
+            ? `${formatCount(totalWrongWayIncidents)} wrong-way incidents distributed by severity.`
+            : "No wrong-way severity distribution available yet."}
+        </p>
         {hasSeverityData ? (
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={severityData} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
