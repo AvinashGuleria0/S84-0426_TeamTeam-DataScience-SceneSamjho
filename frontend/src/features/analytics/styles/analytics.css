@@ -288,6 +288,14 @@
   font-weight: 600;
 }
 
+.chart-context-note {
+  margin: 0 0 10px;
+  color: var(--analytics-text);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 .context-chart-panel {
   width: 100%;
   border: 1px solid var(--analytics-border);
