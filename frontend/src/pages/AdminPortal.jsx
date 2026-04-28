@@ -70,7 +70,8 @@ const AdminPortal = () => {
         vehicle_type: formData.type === 'Pedestrian' ? 'Pedestrian' : 'Car',
         driver_age: 30,
         severity: formData.severity,
-        ambulance_eta: formData.injuries ? '< 15 mins' : 'N/A'
+        ambulance_eta: formData.injuries ? '< 15 mins' : 'N/A',
+        description: formData.description
       };
 
       // Connect using dedicated API Service instead of raw Axios endpoint

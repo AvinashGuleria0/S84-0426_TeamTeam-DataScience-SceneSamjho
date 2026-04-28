@@ -98,19 +98,18 @@ export function AnalyticsDashboard() {
       }
     } catch (requestError) {
       if (isMountedRef.current) {
+        // Log requestError in development if needed
+        console.error("Analytics fetch failed:", requestError);
         setError("Analytics API unavailable. Showing fallback where possible.");
         setWarning("");
       }
     } finally {
-      if (!isMountedRef.current) {
-        return;
+      if (isMountedRef.current) {
+        if (showLoader) {
+          setIsLoading(false);
+        }
+        setIsRefreshing(false);
       }
-
-      if (showLoader) {
-        setIsLoading(false);
-      }
-
-      setIsRefreshing(false);
     }
   }, []);
 
@@ -220,6 +219,7 @@ export function AnalyticsDashboard() {
       setExportFeedback("Analytics snapshot exported.");
       setExportFeedbackType("success");
     } catch (exportError) {
+      console.error("Export error:", exportError);
       setExportFeedback("Failed to export analytics snapshot.");
       setExportFeedbackType("error");
     }
