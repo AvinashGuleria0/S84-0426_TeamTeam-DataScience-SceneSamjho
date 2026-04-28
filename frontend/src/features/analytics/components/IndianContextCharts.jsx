@@ -122,6 +122,27 @@ export const IndianContextCharts = memo(function IndianContextCharts({
   onRetry,
   isRetrying = false,
 }) {
+  const hazardData = useMemo(() => getHazardBreakdown(data), [data]);
+  const severityData = useMemo(() => getWrongWaySeverityData(data), [data]);
+  const weatherData = useMemo(() => getWeatherImpactData(data), [data]);
+  
+  const vehicleData = useMemo(() => getVehicleTypeData(data), [data]);
+  const ageData = useMemo(() => getAgeDistributionData(data), [data]);
+  const safetyData = useMemo(() => getSafetyGearData(data), [data]);
+  const ambulanceData = useMemo(() => getAmbulanceEtaData(data), [data]);
+
+  const hasHazardData = hazardData.some((item) => item.value > 0);
+  const hasSeverityData = severityData.length > 0;
+  const hasWeatherData = weatherData.length > 0;
+  const hasVehicleData = vehicleData.length > 0;
+  const hasAgeData = ageData.length > 0;
+  const hasSafetyData = safetyData.length > 0;
+  const hasAmbulanceData = ambulanceData.length > 0;
+
+  const topHazard = useMemo(() => getTopHazard(hazardData), [hazardData]);
+  const totalHazardIncidents = useMemo(() => hazardData.reduce((sum, item) => sum + item.value, 0), [hazardData]);
+  const totalWrongWayIncidents = useMemo(() => severityData.reduce((sum, item) => sum + item.count, 0), [severityData]);
+
   if (isLoading) {
     return <div className="chart-state">Loading context charts…</div>;
   }
@@ -143,27 +164,6 @@ export const IndianContextCharts = memo(function IndianContextCharts({
       </div>
     );
   }
-
-  const hazardData = useMemo(() => getHazardBreakdown(data), [data]);
-  const severityData = useMemo(() => getWrongWaySeverityData(data), [data]);
-  const weatherData = useMemo(() => getWeatherImpactData(data), [data]);
-  
-  const vehicleData = useMemo(() => getVehicleTypeData(data), [data]);
-  const ageData = useMemo(() => getAgeDistributionData(data), [data]);
-  const safetyData = useMemo(() => getSafetyGearData(data), [data]);
-  const ambulanceData = useMemo(() => getAmbulanceEtaData(data), [data]);
-
-  const hasHazardData = hazardData.some((item) => item.value > 0);
-  const hasSeverityData = severityData.length > 0;
-  const hasWeatherData = weatherData.length > 0;
-  const hasVehicleData = vehicleData.length > 0;
-  const hasAgeData = ageData.length > 0;
-  const hasSafetyData = safetyData.length > 0;
-  const hasAmbulanceData = ambulanceData.length > 0;
-
-  const topHazard = useMemo(() => getTopHazard(hazardData), [hazardData]);
-  const totalHazardIncidents = useMemo(() => hazardData.reduce((sum, item) => sum + item.value, 0), [hazardData]);
-  const totalWrongWayIncidents = useMemo(() => severityData.reduce((sum, item) => sum + item.count, 0), [severityData]);
 
   if (!hasHazardData && !hasSeverityData && !hasWeatherData && !hasVehicleData) {
     return <div className="chart-state">No context data available yet.</div>;
