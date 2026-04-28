@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from api import router as api_router
+from auth import router as auth_router
 import logging
 
 app = FastAPI(
@@ -39,6 +40,7 @@ app.router.redirect_slashes = False
 
 # Register our entry routes
 app.include_router(api_router, prefix="/api/v1")
+app.include_router(auth_router, prefix="/api/v1/auth")
 
 @app.get("/")
 async def root():
